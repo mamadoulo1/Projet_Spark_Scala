@@ -1,9 +1,28 @@
-import org.apache.avro.ipc.specific.Person
+import java.io.FileNotFoundException
 
+import org.apache.avro.ipc.specific.Person
+import org.apache.log4j._
+
+import scala.io._
 import scala.collection.mutable._
 
 object HelloWorldBigData {
+  private var trace_appli : Logger = LogManager.getLogger("Logger_Console")
+  BasicConfigurator.configure()
   def main(args: Array[String]): Unit = {
+    //lecture_fichier("C:/programme/mesdonnees.txt")
+    try{
+      val diviseur = division(12, 0)
+      trace_appli.info(s"Votre nombre est égal à  : ${diviseur}")
+    }
+    catch {
+      case ex: ArithmeticException =>0
+      case ex2: IllegalArgumentException=>0
+    }
+
+
+val nombre : Int = convert_entier("10")
+    trace_appli.info(s"Votre nombre est égal à  : ${nombre}")
     val ma_var_imm : String = "Juvenal" //variable immutable
     val une_var_imm: String = "Formation Big Data"
 
@@ -26,6 +45,10 @@ object HelloWorldBigData {
   }
   // ma premiere fonction
   def Comptage_caracteres(texte: String): Unit={
+    trace_appli.info("démarrage du traçage de la classe")
+    trace_appli.info(s"le paramètre tracé par Log4J pour cette fonction est : $texte")
+    trace_appli.warn(s"Message d'avertissement Log4J interpolation de chaînes : ${10 + 15}")
+
     if (texte.isEmpty()){
       0
     }
@@ -109,6 +132,36 @@ object HelloWorldBigData {
   )
   val tableau : Array[String] = Array("a", "b", "c")
   tableau.foreach(e => println(e))
+
+  //utilisation d'un gestionnaire d'erreur
+  def convert_entier(nombre_entier: String) : Int = {
+    try {
+      val nombre : Int = nombre_entier.toInt
+      return nombre
+    }
+    catch {
+      case ex :  Exception =>0
+    }
+
+  }
+
+  def lecture_fichier(chemin_fichier: String): Unit = {
+    try {
+      val fichier = Source.fromFile(chemin_fichier)
+      fichier.getLines()
+      fichier.close()
+
+    }
+    catch {
+      case ex: FileNotFoundException => trace_appli.error("Votre fichier est introuvable." + ex.printStackTrace())
+    }
+
+  }
+
+  def division(numerateur: Int, denominateur: Int): Double = {
+    val resultat  = numerateur/denominateur
+    return resultat
+  }
 
 
 
